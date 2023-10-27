@@ -10,35 +10,36 @@ import { HardhatRuntimeEnvironment } from "hardhat/types";
 const setupContracts: DeployFunction = async function (
     hre: HardhatRuntimeEnvironment
 ) {
-    const { deploy, log } = hre.deployments;
     const { deployer } = await hre.getNamedAccounts();
 
-    const governorContract = await ethers.getContract("GovernanceToken");
+    const governorContract = await ethers.getContract("GovernorContract");
     const timeLock = await ethers.getContract("TimeLock");
 
     console.log("Setting up roles...");
 
     // get the bytes32 encoded role name
     const proposerRole = await timeLock.PROPOSER_ROLE();
-    const excecutorRole = await timeLock.EXECUTOR_ROLE();
+    const executorRole = await timeLock.EXECUTOR_ROLE();
     const adminRole = await timeLock.TIMELOCK_ADMIN_ROLE();
 
     // grant role to each contract
-    const grantProposerTx = await timeLock.grantRole(
+    const proposerTx = await timeLock.grantRole(
         proposerRole,
         governorContract.address
     );
-    await grantProposerTx.wait(1);
+    await proposerTx.wait(1);
+    console.log(
+        `Grant proposal role ${proposerRole} to contract ${governorContract.address}`
+    );
 
-    const grantExecutorTx = await timeLock.grantRole(
-        excecutorRole,
+    const executorTx = await timeLock.grantRole(
+        executorRole,
         ethers.constants.AddressZero
     );
-    await grantExecutorTx.wait(1);
+    await executorTx.wait(1);
 
-    const revokeAdminTx = await timeLock.revokeRole(adminRole, deployer);
-    await revokeAdminTx.wait(1);
-
+    const revokeTx = await timeLock.revokeRole(adminRole, deployer);
+    await revokeTx.wait(1);
     console.log("Grant roles success!");
 };
 
