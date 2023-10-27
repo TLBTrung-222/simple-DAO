@@ -7,19 +7,6 @@ import "@nomiclabs/hardhat-ethers";
 
 const PRIVATE_KEY = process.env.PRIVATE_KEY;
 
-// module.exports = {
-//     solidity: "0.8.20",
-//     network: {},
-//     namedAccounts: {
-//         deployer: {
-//             default: 0,
-//         },
-//         player: {
-//             default: 1,
-//         },
-//     },
-// };
-
 const config: HardhatUserConfig = {
     defaultNetwork: "hardhat",
     solidity: "0.8.18",

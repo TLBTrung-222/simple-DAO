@@ -5,3 +5,5 @@ cache
 deployments
 coverages
 .vscode
+proposals.json
+typechain-types
